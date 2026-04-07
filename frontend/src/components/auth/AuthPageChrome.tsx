@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react";
 import Link from "next/link";
+import type { Route } from "next";
 import { AppLogo } from "@/components/ui/AppLogo";
 
 type Props = PropsWithChildren<{
@@ -29,7 +30,7 @@ export function AuthPageChrome({ title, subtitle, children, wide, footer }: Prop
         {footer ? (
           <p className="mt-8 text-center text-sm text-zinc-500">
             {footer.label}{" "}
-            <Link href={footer.href} className="font-medium text-cyan-400/95 transition hover:text-cyan-300">
+            <Link href={footer.href as Route} className="font-medium text-cyan-400/95 transition hover:text-cyan-300">
               {footer.linkText}
             </Link>
           </p>

@@ -187,8 +187,10 @@ export function DashboardClient({ userName }: { userName: string }) {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-950 px-6 py-8">
-      <section className="mx-auto max-w-7xl space-y-6">
+    <main className="app-page min-h-screen">
+      <div className="app-backdrop" aria-hidden />
+      <div className="app-grid-bg" aria-hidden />
+      <section className="relative mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
         {workspaces.length === 0 ? (
           <OnboardingView
             userName={userName}
