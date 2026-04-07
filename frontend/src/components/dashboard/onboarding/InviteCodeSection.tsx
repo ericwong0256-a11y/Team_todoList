@@ -6,21 +6,19 @@ type Props = {
 
 export function InviteCodeSection({ value, onChange, onJoin }: Props) {
   return (
-    <div className="space-y-4 rounded-lg border border-slate-700 p-4">
-      <h3 className="font-semibold">Have an invite code?</h3>
-      <p className="text-sm text-slate-400">Join a private team with the code your admin shared.</p>
-      <div className="flex flex-wrap gap-2">
+    <div className="space-y-4 rounded-2xl border border-zinc-800/90 bg-zinc-950/35 p-5">
+      <div>
+        <h3 className="app-section-title">Have an invite code?</h3>
+        <p className="app-muted mt-1">Join a private team with the code your admin shared.</p>
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-stretch">
         <input
           value={value}
           onChange={(e) => onChange(e.target.value.toUpperCase())}
           placeholder="INVITE-CODE"
-          className="min-w-[200px] flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 font-mono text-sm uppercase"
+          className="app-input min-w-0 flex-1 font-mono text-sm uppercase tracking-wide"
         />
-        <button
-          type="button"
-          className="rounded bg-violet-600 px-4 py-2 text-sm hover:bg-violet-500"
-          onClick={() => void onJoin()}
-        >
+        <button type="button" className="app-btn-accent shrink-0 sm:px-6" onClick={() => void onJoin()}>
           Join with code
         </button>
       </div>

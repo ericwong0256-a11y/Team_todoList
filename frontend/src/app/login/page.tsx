@@ -1,9 +1,14 @@
 import { LoginForm } from "@/components/auth/LoginForm";
+import { AuthPageChrome } from "@/components/auth/AuthPageChrome";
 
 export default function LoginPage() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-md items-center px-6">
+    <AuthPageChrome
+      title="Welcome back"
+      subtitle="Sign in to your workspace — tasks, teams, and realtime updates in one place."
+      footer={{ label: "New here?", href: "/register", linkText: "Create an account" }}
+    >
       <LoginForm />
-    </main>
+    </AuthPageChrome>
   );
 }

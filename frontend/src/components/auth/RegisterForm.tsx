@@ -46,25 +46,59 @@ export function RegisterForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="w-full space-y-4 rounded-xl bg-slate-900 p-6 shadow-xl">
-      <h1 className="text-2xl font-semibold">Create your workspace</h1>
-      <input name="name" placeholder="Your name" className="w-full rounded bg-slate-800 p-3" required />
-      <input name="workspaceName" placeholder="Workspace name (optional)" className="w-full rounded bg-slate-800 p-3" />
-      <input name="email" type="email" placeholder="Email" className="w-full rounded bg-slate-800 p-3" required />
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        className="w-full rounded bg-slate-800 p-3"
-        required
-      />
-      {error ? <p className="text-sm text-red-400">{error}</p> : null}
-      <button
-        type="submit"
-        className="w-full rounded bg-blue-600 p-3 font-medium hover:bg-blue-500"
-        disabled={loading}
-      >
-        {loading ? "Creating..." : "Create account"}
+    <form onSubmit={onSubmit} className="space-y-4">
+      <div>
+        <label className="app-label" htmlFor="reg-name">
+          Full name
+        </label>
+        <input id="reg-name" name="name" placeholder="Alex Morgan" className="app-input" required />
+      </div>
+      <div>
+        <label className="app-label" htmlFor="reg-workspace">
+          Workspace <span className="font-normal normal-case text-zinc-600">(optional)</span>
+        </label>
+        <input
+          id="reg-workspace"
+          name="workspaceName"
+          placeholder="Acme Team"
+          className="app-input"
+        />
+      </div>
+      <div>
+        <label className="app-label" htmlFor="reg-email">
+          Email
+        </label>
+        <input
+          id="reg-email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          placeholder="you@company.com"
+          className="app-input"
+          required
+        />
+      </div>
+      <div>
+        <label className="app-label" htmlFor="reg-password">
+          Password
+        </label>
+        <input
+          id="reg-password"
+          name="password"
+          type="password"
+          autoComplete="new-password"
+          placeholder="At least 6 characters"
+          className="app-input"
+          required
+        />
+      </div>
+      {error ? (
+        <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300" role="alert">
+          {error}
+        </p>
+      ) : null}
+      <button type="submit" className="app-btn-primary mt-2 w-full" disabled={loading}>
+        {loading ? "Creating account…" : "Create account"}
       </button>
     </form>
   );

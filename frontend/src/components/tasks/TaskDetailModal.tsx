@@ -58,45 +58,61 @@ export function TaskDetailModal({ task, workspaceId, onClose, onTaskUpdated }: P
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4">
-      <article className="max-h-[85vh] w-full max-w-2xl overflow-auto rounded-2xl border border-slate-700 bg-slate-900 p-5">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Task Details</h3>
-          <button onClick={onClose} className="rounded bg-slate-800 px-3 py-1 text-sm hover:bg-slate-700">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/75 p-4 backdrop-blur-sm">
+      <article className="app-card-elevated max-h-[85vh] w-full max-w-2xl overflow-y-auto p-6 sm:p-8">
+        <div className="mb-6 flex items-start justify-between gap-4">
+          <h3 className="text-lg font-semibold tracking-tight text-zinc-50">Task details</h3>
+          <button type="button" className="app-btn-ghost px-3 py-1.5 text-xs" onClick={onClose}>
             Close
           </button>
         </div>
-        <div className="space-y-3">
-          <label className="block text-sm text-slate-300">Title</label>
-          <input value={title} onChange={(event) => setTitle(event.target.value)} className="w-full rounded bg-slate-800 p-3" />
-          <label className="block text-sm text-slate-300">Description</label>
-          <textarea
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-            className="h-28 w-full rounded bg-slate-800 p-3"
-          />
-          <button onClick={saveTask} className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500">
-            Save task
+
+        <div className="space-y-4">
+          <div>
+            <label className="app-label" htmlFor="task-title">
+              Title
+            </label>
+            <input
+              id="task-title"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              className="app-input"
+            />
+          </div>
+          <div>
+            <label className="app-label" htmlFor="task-desc">
+              Description
+            </label>
+            <textarea
+              id="task-desc"
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              className="app-input min-h-[7rem] resize-y"
+            />
+          </div>
+          <button type="button" className="app-btn-primary w-full sm:w-auto" onClick={saveTask}>
+            Save changes
           </button>
         </div>
-        <section className="mt-6">
-          <h4 className="mb-2 font-semibold">Comments</h4>
-          <div className="space-y-2">
+
+        <section className="app-divider mt-8 pt-8">
+          <h4 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">Comments</h4>
+          <div className="mt-4 space-y-2">
             {comments.map((item) => (
-              <div key={item.id} className="rounded bg-slate-800 p-3">
-                <p className="text-sm">{item.body}</p>
-                <p className="mt-1 text-xs text-slate-400">{item.author.name}</p>
+              <div key={item.id} className="rounded-xl border border-zinc-800/80 bg-zinc-950/50 p-3">
+                <p className="text-sm text-zinc-200">{item.body}</p>
+                <p className="mt-1.5 text-[11px] text-zinc-500">{item.author.name}</p>
               </div>
             ))}
           </div>
-          <form onSubmit={addComment} className="mt-3 flex gap-2">
+          <form onSubmit={addComment} className="mt-4 flex flex-col gap-2 sm:flex-row">
             <input
               value={comment}
               onChange={(event) => setComment(event.target.value)}
-              placeholder="Write a comment"
-              className="flex-1 rounded bg-slate-800 p-2"
+              placeholder="Write a comment…"
+              className="app-input flex-1"
             />
-            <button type="submit" className="rounded bg-emerald-600 px-3 hover:bg-emerald-500">
+            <button type="submit" className="app-btn-secondary shrink-0 sm:px-6">
               Add
             </button>
           </form>

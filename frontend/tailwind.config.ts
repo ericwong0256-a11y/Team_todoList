@@ -8,9 +8,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"]
+      },
       colors: {
         surface: "#0f172a",
         panel: "#111827"
+      },
+      boxShadow: {
+        glow: "0 0 80px -20px rgba(34, 211, 238, 0.35)"
       }
     }
   },
