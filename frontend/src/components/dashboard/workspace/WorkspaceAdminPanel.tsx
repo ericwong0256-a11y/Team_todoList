@@ -13,6 +13,11 @@ export function WorkspaceAdminPanel({ workspace, onVisibilityChange, onRegenerat
         <span className="rounded bg-slate-800 px-2 py-0.5 text-xs">
           {workspace.isSandbox ? "Personal sandbox" : "Team workspace"}
         </span>
+        {workspace.role === "ADMIN" && !workspace.isSandbox ? (
+          <span className="rounded bg-emerald-900/50 px-2 py-0.5 text-xs font-medium text-emerald-200">
+            Team manager
+          </span>
+        ) : null}
         {workspace.role === "ADMIN" ? (
           <label className="flex items-center gap-2">
             <span className="text-slate-400">Visibility</span>

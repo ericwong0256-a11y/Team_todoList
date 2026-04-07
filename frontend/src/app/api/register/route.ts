@@ -46,11 +46,12 @@ export async function POST(req: Request) {
     const workspace = await tx.workspace.create({
       data: {
         name: workspaceName,
-        slug,
-        visibility: "PUBLIC",
-        isSandbox: false
+        slug
       }
     });
+    await tx.$executeRaw`
+      UPDATE Workspace SET visibility = 'PUBLIC', isSandbox = 0, inviteCode = NULL WHERE id = ${workspace.id}
+    `;
 
     await tx.membership.create({
       data: {

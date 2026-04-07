@@ -6,9 +6,13 @@ import { KanbanBoard } from "@/components/kanban/KanbanBoard";
 import { CalendarView } from "@/components/calendar/CalendarView";
 import { TaskDetailModal } from "@/components/tasks/TaskDetailModal";
 import { getSocket } from "@/lib/realtime";
+import { normalizeApiError } from "@/lib/api-errors";
 import { CreateTeamDialog } from "@/components/dashboard/onboarding/CreateTeamDialog";
 import { OnboardingView } from "@/components/dashboard/onboarding/OnboardingView";
 import { DashboardWorkspaceHeader } from "@/components/dashboard/workspace/DashboardWorkspaceHeader";
+
+/** Stable options so effects don’t need to depend on a new object each render */
+const apiFetch: RequestInit = { credentials: "include", cache: "no-store" };
 
 export function DashboardClient({ userName }: { userName: string }) {
   const [workspaces, setWorkspaces] = useState<WorkspaceSummary[]>([]);
@@ -26,7 +30,7 @@ export function DashboardClient({ userName }: { userName: string }) {
   const [lastCreatedInvite, setLastCreatedInvite] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/workspaces")
+    fetch("/api/workspaces", apiFetch)
       .then((res) => res.json())
       .then((data: WorkspaceSummary[]) => {
         const normalized = (Array.isArray(data) ? data : []).map((w) => ({
@@ -42,7 +46,7 @@ export function DashboardClient({ userName }: { userName: string }) {
 
   useEffect(() => {
     if (workspaces.length > 0) return;
-    fetch("/api/workspaces/discover")
+    fetch("/api/workspaces/discover", apiFetch)
       .then((res) => res.json())
       .then((data) => setDiscoverTeams(Array.isArray(data) ? data : []))
       .catch(() => setDiscoverTeams([]));
@@ -50,7 +54,7 @@ export function DashboardClient({ userName }: { userName: string }) {
 
   useEffect(() => {
     if (!workspaceId) return;
-    fetch(`/api/tasks?workspaceId=${workspaceId}`)
+    fetch(`/api/tasks?workspaceId=${workspaceId}`, apiFetch)
       .then((res) => res.json())
       .then((data: TaskItem[]) => setTasks(data))
       .catch(() => setTasks([]));
@@ -76,17 +80,20 @@ export function DashboardClient({ userName }: { userName: string }) {
     return { total, inProgress, done };
   }, [tasks]);
 
-  async function refreshMemberships() {
-    const res = await fetch("/api/workspaces");
+  async function refreshMemberships(preferredWorkspaceId?: string) {
+    const res = await fetch("/api/workspaces", apiFetch);
     const data = await res.json();
-    if (Array.isArray(data)) {
-      const normalized = data.map((w) => ({
-        ...w,
-        visibility: w.visibility ?? "PUBLIC",
-        isSandbox: w.isSandbox ?? false
-      }));
-      setWorkspaces(normalized);
-      if (normalized[0]) setWorkspaceId(normalized[0].workspaceId);
+    if (!Array.isArray(data)) return;
+    const normalized = data.map((w) => ({
+      ...w,
+      visibility: w.visibility ?? "PUBLIC",
+      isSandbox: w.isSandbox ?? false
+    }));
+    setWorkspaces(normalized);
+    if (preferredWorkspaceId && normalized.some((w) => w.workspaceId === preferredWorkspaceId)) {
+      setWorkspaceId(preferredWorkspaceId);
+    } else if (normalized[0]) {
+      setWorkspaceId(normalized[0].workspaceId);
     }
   }
 
@@ -97,25 +104,76 @@ export function DashboardClient({ userName }: { userName: string }) {
       setCreateTeamError("Team name is required.");
       return;
     }
-    setCreateTeamBusy(true);
-    setCreateTeamError("");
-    const res = await fetch("/api/workspaces", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, visibility: newTeamVisibility })
-    });
-    if (!res.ok) {
-      setCreateTeamBusy(false);
-      setCreateTeamError("Could not create team. Please try again.");
+    if (name.length < 2) {
+      setCreateTeamError("Team name must be at least 2 characters.");
       return;
     }
-    const body = await res.json();
-    setLastCreatedInvite(newTeamVisibility === "PRIVATE" && body.inviteCode ? String(body.inviteCode) : null);
-    setNewTeamName("");
-    setNewTeamVisibility("PUBLIC");
-    setCreateTeamBusy(false);
-    setIsCreateTeamDialogOpen(false);
-    await refreshMemberships();
+    setCreateTeamBusy(true);
+    setCreateTeamError("");
+    try {
+      const res = await fetch("/api/workspaces", {
+        method: "POST",
+        credentials: "include",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, visibility: newTeamVisibility })
+      });
+      const payload: unknown = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const err =
+          typeof payload === "object" && payload !== null && "error" in payload
+            ? (payload as { error: unknown }).error
+            : payload;
+        const details =
+          typeof payload === "object" && payload !== null && "details" in payload
+            ? String((payload as { details: unknown }).details ?? "")
+            : "";
+        const base = normalizeApiError(err, "Could not create team. Please try again.");
+        setCreateTeamError(details ? `${base} (${details})` : base);
+        return;
+      }
+      const body = payload as {
+        workspaceId: string;
+        role: string;
+        name: string;
+        slug: string;
+        visibility: string;
+        isSandbox: boolean;
+        inviteCode?: string | null;
+      };
+      setLastCreatedInvite(newTeamVisibility === "PRIVATE" && body.inviteCode ? String(body.inviteCode) : null);
+      setNewTeamName("");
+      setNewTeamVisibility("PUBLIC");
+      setIsCreateTeamDialogOpen(false);
+
+      const createdSummary: WorkspaceSummary = {
+        workspaceId: body.workspaceId,
+        name: body.name,
+        slug: body.slug,
+        role: body.role === "ADMIN" ? "ADMIN" : "MEMBER",
+        visibility: (body.visibility === "PRIVATE" ? "PRIVATE" : "PUBLIC") as WorkspaceVisibility,
+        isSandbox: Boolean(body.isSandbox),
+        inviteCode:
+          body.role === "ADMIN" && body.visibility === "PRIVATE" && body.inviteCode
+            ? String(body.inviteCode)
+            : undefined
+      };
+      setWorkspaces((prev) => {
+        const rest = prev.filter((w) => w.workspaceId !== createdSummary.workspaceId);
+        return [createdSummary, ...rest];
+      });
+      setWorkspaceId(body.workspaceId);
+      setTasks([]);
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      await refreshMemberships(body.workspaceId);
+    } catch {
+      setCreateTeamError("Network error. Please try again.");
+    } finally {
+      setCreateTeamBusy(false);
+    }
   }
 
   const currentWorkspace = useMemo(

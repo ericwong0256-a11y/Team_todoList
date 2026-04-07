@@ -37,12 +37,12 @@ export async function POST() {
     const workspace = await prisma.workspace.create({
       data: {
         name,
-        slug,
-        visibility: "PRIVATE",
-        isSandbox: true,
-        inviteCode: null
+        slug
       }
     });
+    await prisma.$executeRaw`
+      UPDATE Workspace SET visibility = 'PRIVATE', isSandbox = 1, inviteCode = NULL WHERE id = ${workspace.id}
+    `;
 
     await prisma.membership.create({
       data: {
@@ -61,13 +61,18 @@ export async function POST() {
       ]
     });
 
+    const rows = await prisma.$queryRaw<{ visibility: string }[]>`
+      SELECT visibility FROM Workspace WHERE id = ${workspace.id}
+    `;
+    const visibility = rows[0]?.visibility ?? "PRIVATE";
+
     return NextResponse.json(
       {
         workspaceId: workspace.id,
         role: ROLES.ADMIN,
         name: workspace.name,
         slug: workspace.slug,
-        visibility: workspace.visibility,
+        visibility,
         isSandbox: true
       },
       { status: 201 }
