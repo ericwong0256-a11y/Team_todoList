@@ -49,7 +49,11 @@ export default function RegisterPage() {
       <form onSubmit={onSubmit} className="w-full space-y-4 rounded-xl bg-slate-900 p-6 shadow-xl">
         <h1 className="text-2xl font-semibold">Create your workspace</h1>
         <input name="name" placeholder="Your name" className="w-full rounded bg-slate-800 p-3" required />
-        <input name="workspaceName" placeholder="Workspace name" className="w-full rounded bg-slate-800 p-3" required />
+        <input
+          name="workspaceName"
+          placeholder="Workspace name (optional)"
+          className="w-full rounded bg-slate-800 p-3"
+        />
         <input name="email" type="email" placeholder="Email" className="w-full rounded bg-slate-800 p-3" required />
         <input
           name="password"
