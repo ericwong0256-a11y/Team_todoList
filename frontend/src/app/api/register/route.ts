@@ -8,7 +8,7 @@ const schema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(6),
-  workspaceName: z.string().min(2)
+  workspaceName: z.string().min(2).optional()
 });
 
 export async function POST(req: Request) {
@@ -24,17 +24,22 @@ export async function POST(req: Request) {
   }
 
   const passwordHash = await hash(password, 10);
-  const slug = workspaceName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-
   const result = await prisma.$transaction(async (tx) => {
     const user = await tx.user.create({
       data: { name, email, passwordHash }
     });
 
+    if (!workspaceName) {
+      return { userId: user.id, workspaceId: null };
+    }
+
+    const slug = workspaceName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     const workspace = await tx.workspace.create({
       data: {
         name: workspaceName,
-        slug
+        slug,
+        visibility: "PUBLIC",
+        isSandbox: false
       }
     });
 

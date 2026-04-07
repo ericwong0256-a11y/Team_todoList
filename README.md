@@ -12,6 +12,8 @@ It includes a modern dashboard, Kanban workflow, calendar planning, task detail 
 - Task detail modal with inline editing and comments
 - Real-time task updates via Socket.IO
 - Authenticated access with NextAuth (credentials provider)
+- Team onboarding: discover public teams, join with invite code, create public/private teams, or start a personal sandbox workspace
+- **Visibility:** public teams appear in discovery; private teams can only be joined with an invite code
 
 ## Tech Stack
 
@@ -108,6 +110,13 @@ npm run socket
 
 - **Email:** `admin@todoapp.dev`
 - **Password:** `admin123`
+
+## Teams & invites
+
+- **Public team:** listed under “Public teams available to join” for users with no membership yet.
+- **Private team:** not listed; members join with an invite code (`POST /api/workspaces/join-invite` with `{ "inviteCode": "..." }`).
+- **Workspace admins** can switch visibility and rotate the invite code from the dashboard (team workspace only).
+- **Personal sandbox:** `POST /api/workspaces/sandbox` — creates a private workspace only for you (`isSandbox`), not shown in discovery.
 
 ## Available Scripts
 
