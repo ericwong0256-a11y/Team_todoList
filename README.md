@@ -58,6 +58,13 @@ It includes a modern dashboard, Kanban workflow, calendar planning, task detail 
 npm install
 ```
 
+Install from individual packages (optional):
+
+```bash
+npm install -w frontend
+npm install -w backend
+```
+
 ### 2) Configure environment
 
 Create `frontend/.env` from `frontend/.env.example`:
@@ -104,15 +111,15 @@ npm run socket
 
 ## Available Scripts
 
-- `npm run dev` - start Next.js in development mode
-- `npm run build` - production build
-- `npm run start` - run production build
-- `npm run typecheck` - TypeScript checks
-- `npm run test` - run unit tests (Vitest)
-- `npm run prisma:generate` - generate Prisma client
-- `npm run prisma:migrate` - create/apply migration
-- `npm run prisma:seed` - seed sample data
-- `npm run socket` - start Socket.IO server
+- Root workspace:
+  - `npm run dev` - start frontend app
+  - `npm run socket` - start backend realtime server
+  - `npm run build` / `npm run start`
+  - `npm run typecheck` / `npm run test`
+  - `npm run prisma:generate` / `npm run prisma:migrate` / `npm run prisma:seed`
+- Package-scoped:
+  - `npm run dev -w frontend`
+  - `npm run dev -w backend`
 
 ## Current Scope
 
