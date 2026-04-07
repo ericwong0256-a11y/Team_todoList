@@ -1,0 +1,14 @@
+{
+  "name": "@todolist/backend",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "dev:3002": "node -e \"process.env.SOCKET_PORT='3002'; require('./index.js')\"",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.8.3"
+  }
+}
