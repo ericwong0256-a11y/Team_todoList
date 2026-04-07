@@ -13,6 +13,15 @@ export type WorkspaceSummary = {
   inviteCode?: string | null;
 };
 
+/** Public teams from GET /api/workspaces/discover */
+export type DiscoverableTeam = {
+  workspaceId: string;
+  name: string;
+  slug: string;
+  members: number;
+  visibility: string;
+};
+
 export type TaskItem = {
   id: string;
   workspaceId: string;

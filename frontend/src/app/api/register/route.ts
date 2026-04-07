@@ -5,10 +5,19 @@ import { prisma } from "@/lib/prisma";
 import { ROLES, TASK_STATUS } from "@/lib/constants";
 
 const schema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  password: z.string().min(6),
-  workspaceName: z.string().min(2).optional()
+  name: z.string().trim().min(2, "Name must be at least 2 characters"),
+  email: z.string().trim().email(),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  /** Omit or leave blank — empty string must not fail validation */
+  workspaceName: z.preprocess(
+    (val) => {
+      if (val === undefined || val === null) return undefined;
+      if (typeof val !== "string") return val;
+      const t = val.trim();
+      return t === "" ? undefined : t;
+    },
+    z.string().min(2, "Workspace name must be at least 2 characters").optional()
+  )
 });
 
 export async function POST(req: Request) {
