@@ -27,24 +27,26 @@ It includes a modern dashboard, Kanban workflow, calendar planning, task detail 
 
 ```text
 .
-|- prisma/
-|  |- schema.prisma
-|  |- migrations/
-|  |- seed.js
-|- src/
-|  |- app/
-|  |  |- api/
-|  |  |- dashboard/
-|  |  |- login/
-|  |  |- register/
-|  |- components/
-|  |  |- dashboard/
-|  |  |- kanban/
-|  |  |- calendar/
-|  |  |- tasks/
-|  |- lib/
-|  |- server/socket/
-|- middleware.ts
+|- frontend/
+|  |- prisma/
+|  |  |- schema.prisma
+|  |  |- migrations/
+|  |  |- seed.js
+|  |- src/
+|  |  |- app/
+|  |  |  |- api/
+|  |  |  |- dashboard/
+|  |  |  |- login/
+|  |  |  |- register/
+|  |  |- components/
+|  |  |  |- dashboard/
+|  |  |  |- kanban/
+|  |  |  |- calendar/
+|  |  |  |- tasks/
+|  |  |- lib/
+|  |- middleware.ts
+|- backend/
+|  |- index.js
 |- package.json
 ```
 
@@ -58,10 +60,10 @@ npm install
 
 ### 2) Configure environment
 
-Create `.env` from `.env.example`:
+Create `frontend/.env` from `frontend/.env.example`:
 
 ```bash
-cp .env.example .env
+cp frontend/.env.example frontend/.env
 ```
 
 Default development values:
