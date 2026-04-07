@@ -23,27 +23,27 @@ export function CreateTeamDialog({
   onSubmit
 }: Props) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4">
-      <article className="w-full max-w-xl rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl">
-        <div className="mb-5 flex items-start justify-between gap-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/75 p-4 backdrop-blur-sm">
+      <article className="app-card-elevated w-full max-w-xl p-6 shadow-2xl sm:p-8">
+        <div className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <h3 className="text-xl font-semibold">Create a new team</h3>
-            <p className="mt-1 text-sm text-slate-400">
-              Invite your teammates, manage visibility, and start collaborating in seconds.
+            <h3 className="text-xl font-semibold tracking-tight text-zinc-50">Create a new team</h3>
+            <p className="mt-1.5 text-sm leading-relaxed text-zinc-400">
+              Choose visibility and invite teammates later from the team dashboard.
             </p>
           </div>
           <button
             type="button"
-            className="rounded-md border border-slate-600 px-3 py-1.5 text-sm hover:bg-slate-800"
+            className="app-btn-ghost shrink-0 px-3 py-1.5 text-xs"
             onClick={onClose}
           >
             Close
           </button>
         </div>
 
-        <form className="space-y-4" onSubmit={(e) => void onSubmit(e)}>
-          <div className="space-y-2">
-            <label className="text-sm text-slate-300" htmlFor="create-team-name">
+        <form className="space-y-5" onSubmit={(e) => void onSubmit(e)}>
+          <div>
+            <label className="app-label" htmlFor="create-team-name">
               Team name
             </label>
             <input
@@ -52,56 +52,52 @@ export function CreateTeamDialog({
               value={teamName}
               onChange={(event) => onTeamNameChange(event.target.value)}
               placeholder="e.g. Product Engineering"
-              className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 outline-none ring-violet-400 transition focus:ring-2"
+              className="app-input"
             />
           </div>
 
-          <fieldset className="space-y-2">
-            <legend className="text-sm text-slate-300">Visibility</legend>
-            <div className="grid gap-2 md:grid-cols-2">
+          <fieldset className="space-y-3">
+            <legend className="app-label">Visibility</legend>
+            <div className="grid gap-2 sm:grid-cols-2">
               <button
                 type="button"
                 onClick={() => onVisibilityChange("PUBLIC")}
-                className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
+                className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
                   visibility === "PUBLIC"
-                    ? "border-violet-400 bg-violet-500/15 text-violet-100"
-                    : "border-slate-700 bg-slate-800/70 text-slate-300 hover:bg-slate-800"
+                    ? "border-cyan-500/50 bg-cyan-500/10 text-cyan-50 shadow-lg shadow-cyan-950/20"
+                    : "border-zinc-800/90 bg-zinc-950/40 text-zinc-300 hover:border-zinc-700"
                 }`}
               >
-                <p className="font-medium">Public</p>
-                <p className="text-xs text-slate-400">Visible in team discovery.</p>
+                <p className="font-semibold">Public</p>
+                <p className="mt-0.5 text-xs text-zinc-500">Listed in team discovery.</p>
               </button>
               <button
                 type="button"
                 onClick={() => onVisibilityChange("PRIVATE")}
-                className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
+                className={`rounded-xl border px-4 py-3 text-left text-sm transition ${
                   visibility === "PRIVATE"
-                    ? "border-violet-400 bg-violet-500/15 text-violet-100"
-                    : "border-slate-700 bg-slate-800/70 text-slate-300 hover:bg-slate-800"
+                    ? "border-violet-500/50 bg-violet-500/10 text-violet-50 shadow-lg shadow-violet-950/25"
+                    : "border-zinc-800/90 bg-zinc-950/40 text-zinc-300 hover:border-zinc-700"
                 }`}
               >
-                <p className="font-medium">Private</p>
-                <p className="text-xs text-slate-400">Join by invite code only.</p>
+                <p className="font-semibold">Private</p>
+                <p className="mt-0.5 text-xs text-zinc-500">Invite code only.</p>
               </button>
             </div>
           </fieldset>
 
-          {error ? <p className="text-sm text-red-400">{error}</p> : null}
+          {error ? (
+            <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300" role="alert">
+              {error}
+            </p>
+          ) : null}
 
-          <div className="flex justify-end gap-2 border-t border-slate-800 pt-4">
-            <button
-              type="button"
-              className="rounded border border-slate-600 px-4 py-2 text-sm hover:bg-slate-800"
-              onClick={onClose}
-            >
+          <div className="app-divider flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">
+            <button type="button" className="app-btn-secondary w-full sm:w-auto" onClick={onClose}>
               Cancel
             </button>
-            <button
-              type="submit"
-              disabled={busy}
-              className="rounded bg-emerald-600 px-4 py-2 text-sm font-medium hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-70"
-            >
-              {busy ? "Creating..." : "Create team"}
+            <button type="submit" disabled={busy} className="app-btn-primary w-full min-w-[140px] sm:w-auto">
+              {busy ? "Creating…" : "Create team"}
             </button>
           </div>
         </form>

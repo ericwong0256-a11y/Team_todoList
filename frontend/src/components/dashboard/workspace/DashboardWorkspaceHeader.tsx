@@ -92,9 +92,9 @@ export function DashboardWorkspaceHeader({
       ) : null}
 
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <StatCard label="Tasks Due" value={stats.total} accent="cyan" />
-        <StatCard label="In Progress" value={stats.inProgress} accent="violet" />
-        <StatCard label="Completed" value={stats.done} accent="emerald" />
+        <StatCard label="Tasks Due" value={stats.total} tone="cyan" />
+        <StatCard label="In Progress" value={stats.inProgress} tone="violet" />
+        <StatCard label="Completed" value={stats.done} tone="emerald" />
       </div>
 
       <form className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center" onSubmit={(e) => void onCreateTask(e)}>
