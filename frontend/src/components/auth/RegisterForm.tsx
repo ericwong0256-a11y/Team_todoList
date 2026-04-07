@@ -97,7 +97,7 @@ export function RegisterForm() {
           {error}
         </p>
       ) : null}
-      <button type="submit" className="app-btn-primary mt-2" disabled={loading}>
+      <button type="submit" className="app-btn-primary mt-2 w-full" disabled={loading}>
         {loading ? "Creating account…" : "Create account"}
       </button>
     </form>

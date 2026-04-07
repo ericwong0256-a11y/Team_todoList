@@ -4,14 +4,10 @@ type Props = {
 
 export function SandboxSkipRow({ onCreateSandbox }: Props) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800 pt-4">
-      <p className="text-sm text-slate-400">Not ready to join a team? Use a personal sandbox.</p>
-      <button
-        type="button"
-        className="rounded border border-slate-600 px-4 py-2 text-sm hover:bg-slate-800"
-        onClick={() => void onCreateSandbox()}
-      >
-        Skip for now — personal sandbox
+    <div className="app-divider flex flex-col gap-3 pt-6 sm:flex-row sm:items-center sm:justify-between">
+      <p className="text-sm text-zinc-500">Prefer to explore alone first? Spin up a personal sandbox.</p>
+      <button type="button" className="app-btn-ghost shrink-0 text-sm" onClick={() => void onCreateSandbox()}>
+        Use personal sandbox
       </button>
     </div>
   );
